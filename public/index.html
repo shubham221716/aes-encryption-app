@@ -33,7 +33,7 @@
 
       <div class="message" id="encMsg"></div> -->
 
- <div id="encResult" class="result-box">Encrypted code</div>
+      <div id="encResult" class="result-box">Encrypted code</div>
       <span id="encMsg" class="message"></span>
 
       <button
@@ -132,9 +132,12 @@
             const msgElem = document.getElementById(msgId);
             if (msgElem) {
               msgElem.textContent = "Copied to clipboard!";
+              msgElem.classList.add("copy-success");
+
               setTimeout(() => {
                 msgElem.textContent = "";
-              }, 2000);
+                msgElem.classList.remove("copy-success");
+              }, 5000);
             }
           })
           .catch(() => {
