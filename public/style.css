@@ -52,13 +52,22 @@
 
     textarea,
     input {
-        width: 80%;
+        width: 95%;
         margin-top: 10px;
         background: #f0f4f8;
         padding: 12px;
         border: 1px solid #ccc;
         border-radius: 8px;
         transition: border 0.3s, background 0.3s, color 0.3s;
+    }
+
+    @media (max-width: 600px) {
+
+        textarea,
+        input {
+            width: 90%;
+
+        }
     }
 
     body.dark textarea,
@@ -100,14 +109,20 @@
         box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
     }
 
- label {
+
+
+
+    label {
         display: block;
         font-weight: 600;
         margin-top: 15px;
-      }
+    }
 
 
     .result-box {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         background: var(--result-bg-light);
         padding: 12px;
         margin-top: 10px;
