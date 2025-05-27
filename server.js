@@ -2,32 +2,49 @@ const express = require('express');
 const crypto = require('crypto');
 const path = require('path');
 const app = express();
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-const key = crypto.scryptSync('your-secret-password', 'salt', 32);
-const iv = Buffer.alloc(16, 0); // 16 bytes IV (static for simplicity)
+const store = new Map();
+
+function getKey(secret) {
+  return crypto.createHash('sha256').update(secret).digest().slice(0, 32);
+}
+
+function getIV() {
+  return Buffer.from('1234567890abcdef');
+}
 
 app.post('/encrypt', (req, res) => {
-  const text = req.body.text || '';
-  const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
-  let encrypted = cipher.update(text, 'utf8', 'hex');
-  encrypted += cipher.final('hex');
-  res.json({ encrypted: encrypted.slice(0, 10) });
+  const { text, key } = req.body;
+  if (!text || !key) return res.json({ error: 'Missing input' });
+
+  const cipher = crypto.createCipheriv('aes-256-cbc', getKey(key), getIV());
+  let encrypted = cipher.update(text, 'utf8', 'base64');
+  encrypted += cipher.final('base64');
+
+  const hash = crypto.createHash('sha256').update(encrypted).digest('base64');
+  const short = hash.replace(/[^A-Za-z0-9]/g, '').slice(0, 10);
+
+  store.set(short, encrypted);
+  res.json({ code: short });
 });
 
 app.post('/decrypt', (req, res) => {
-  const encrypted = req.body.encrypted || '';
-  const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
+  const { code, key } = req.body;
+  const encrypted = store.get(code);
+  if (!encrypted) return res.json({ error: 'Code not found' });
+
   try {
-    let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+    const decipher = crypto.createDecipheriv('aes-256-cbc', getKey(key), getIV());
+    let decrypted = decipher.update(encrypted, 'base64', 'utf8');
     decrypted += decipher.final('utf8');
-    res.json({ decrypted });
-  } catch {
-    res.json({ decrypted: 'Invalid encrypted text' });
+    res.json({ text: decrypted });
+  } catch (e) {
+    res.json({ error: 'Decryption failed' });
   }
 });
 
-const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

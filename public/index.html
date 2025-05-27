@@ -1,51 +1,101 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AES Encryption App</title>
+  <title>AES Encryption</title>
   <style>
-    body { font-family: sans-serif; padding: 2rem; background: #f4f4f4; }
-    input, textarea, button { width: 100%; padding: 1rem; margin-top: 1rem; }
-    .section { background: #fff; padding: 2rem; margin-bottom: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    :root {
+      --bg: #f0f4f8;
+      --text: #1a202c;
+      --accent: #3182ce;
+      --card-bg: #ffffff;
+    }
+    body {
+      font-family: sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      padding: 30px;
+    }
+    .container {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 { color: var(--accent); text-align: center; }
+    textarea, input {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      background: var(--accent);
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    .result-box {
+      background: #eee;
+      padding: 10px;
+      margin-top: 10px;
+      word-wrap: break-word;
+    }
   </style>
 </head>
 <body>
-  <div class="section">
-    <h2>🔐 Encrypt Text</h2>
-    <input id="enc-text" placeholder="Enter text to encrypt"/>
+  <div class="container">
+    <h2>AES Encrypt</h2>
+    <textarea id="plainText" rows="3" placeholder="Enter text to encrypt"></textarea>
+    <input type="text" id="encKey" placeholder="Secret Key"/>
     <button onclick="encrypt()">Encrypt</button>
-    <textarea id="enc-result" readonly></textarea>
-  </div>
+    <div class="result-box" id="encResult">Encrypted code will appear here</div>
 
-  <div class="section">
-    <h2>🔓 Decrypt Code</h2>
-    <input id="dec-text" placeholder="Enter encrypted code"/>
+    <h2>AES Decrypt</h2>
+    <textarea id="cipherText" rows="3" placeholder="Enter encrypted code"></textarea>
+    <input type="text" id="decKey" placeholder="Secret Key"/>
     <button onclick="decrypt()">Decrypt</button>
-    <textarea id="dec-result" readonly></textarea>
+    <div class="result-box" id="decResult">Decrypted text will appear here</div>
   </div>
 
   <script>
-    async function encrypt() {
-      const text = document.getElementById('enc-text').value;
-      const res = await fetch('/encrypt', {
+    function encrypt() {
+      fetch('/encrypt', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text })
+        body: JSON.stringify({
+          text: document.getElementById('plainText').value,
+          key: document.getElementById('encKey').value
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('encResult').innerText = data.code || data.error;
       });
-      const data = await res.json();
-      document.getElementById('enc-result').value = data.encrypted;
     }
 
-    async function decrypt() {
-      const text = document.getElementById('dec-text').value;
-      const res = await fetch('/decrypt', {
+    function decrypt() {
+      fetch('/decrypt', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ encrypted: text })
+        body: JSON.stringify({
+          code: document.getElementById('cipherText').value,
+          key: document.getElementById('decKey').value
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('decResult').innerText = data.text || data.error;
       });
-      const data = await res.json();
-      document.getElementById('dec-result').value = data.decrypted;
     }
   </script>
 </body>
