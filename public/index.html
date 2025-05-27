@@ -1,70 +1,204 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AES Encryption</title>
   <style>
     :root {
-      --bg: #f0f4f8;
-      --text: #1a202c;
+      --bg-light: #f0f4f8;
+      --text-light: #1a202c;
+      --card-bg-light: #ffffff;
+      --result-bg-light: #f1f5f9;
+
+      --bg-dark: #1a202c;
+      --text-dark: #e2e8f0;
+      --card-bg-dark: #2d3748;
+      --result-bg-dark: #4a5568;
+
       --accent: #3182ce;
-      --card-bg: #ffffff;
+      --success: #48bb78;
     }
+
     body {
-      font-family: sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 30px;
       display: flex;
       justify-content: center;
-      padding: 30px;
+      background-color: var(--bg-light);
+      color: var(--text-light);
+      transition: background-color 0.3s, color 0.3s;
     }
+
+    body.dark {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
     .container {
-      background: var(--card-bg);
-      padding: 20px;
-      border-radius: 10px;
+      background: var(--card-bg-light);
+      padding: 25px;
+      border-radius: 12px;
       width: 100%;
-      max-width: 600px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 640px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      position: relative;
+      transition: background 0.3s;
     }
-    h2 { color: var(--accent); text-align: center; }
+
+    body.dark .container {
+      background: var(--card-bg-dark);
+    }
+
+    h2 {
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
     textarea, input {
-      width: 100%;
+      width: 80%;
       margin-top: 10px;
-      padding: 10px;
+      padding: 12px;
       border: 1px solid #ccc;
-      border-radius: 6px;
+      border-radius: 8px;
+      transition: border 0.3s, background 0.3s, color 0.3s;
     }
-    button {
-      background: var(--accent);
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
-      margin-top: 10px;
-      cursor: pointer;
+
+    body.dark textarea, body.dark input {
+      background: #2d3748;
+      color: #e2e8f0;
+      border-color: #555;
     }
+
+    textarea:focus, input:focus {
+      border-color: var(--accent);
+      outline: none;
+    }
+
+.copy-btn-enc {
+  background-color: var(--accent);
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  margin-top: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+}
+
+.copy-btn-enc:hover {
+  background-color: var(--accent-hover, #0056b3); /* fallback hover color */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.copy-btn-enc:active {
+  transform: translateY(1px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+
+  
     .result-box {
-      background: #eee;
-      padding: 10px;
+      background: var(--result-bg-light);
+      padding: 12px;
       margin-top: 10px;
       word-wrap: break-word;
+      position: relative;
+      border-radius: 8px;
+      transition: background 0.3s;
     }
+
+    body.dark .result-box {
+      background: var(--result-bg-dark);
+    }
+
+    .copy-btn {
+      position: absolute;
+      right: 10px;
+      
+      background: transparent;
+      border: none;
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 25px;
+    }
+
+    .message {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 14px;
+      color: var(--success);
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: transparent;
+      border: 1px solid var(--accent);
+      padding: 5px 10px;
+      border-radius: 6px;
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+      .glow-line {
+    border: none;
+    height: 4px;
+    width: 100%;
+    margin: 50px auto;
+    background-color: #e182ce;
+    border-radius: 5px;
+    box-shadow: 0 0 10px #e182ce, 0 0 20px #e182ce;
+    animation: glowPulse 1.5s infinite alternate;
+  }
+
+  @keyframes glowPulse {
+    from {
+      box-shadow: 0 0 10px #e182ce, 0 0 20px #e182ce;
+    }
+    to {
+      box-shadow: 0 0 20px #e182ce, 0 0 30px #e182ce;
+    }
+  }
+
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>AES Encrypt</h2>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+
+    <h2>🔐 AES Encrypt</h2>
     <textarea id="plainText" rows="3" placeholder="Enter text to encrypt"></textarea>
     <input type="text" id="encKey" placeholder="Secret Key"/>
-    <button onclick="encrypt()">Encrypt</button>
-    <div class="result-box" id="encResult">Encrypted code will appear here</div>
+    <button class="copy-btn-enc" onclick="encrypt()">Encrypt</button>
+    <div class="result-box" id="encResult">Encrypted code
+      <button class="copy-btn" onclick="copyText('encResult')">📋</button>
+    </div>
+    <div class="message" id="encMsg"></div>
 
-    <h2>AES Decrypt</h2>
+
+
+<hr class="glow-line">
+
+
+
+    <h2>🔓 AES Decrypt</h2>
     <textarea id="cipherText" rows="3" placeholder="Enter encrypted code"></textarea>
     <input type="text" id="decKey" placeholder="Secret Key"/>
     <button onclick="decrypt()">Decrypt</button>
-    <div class="result-box" id="decResult">Decrypted text will appear here</div>
+    <div class="result-box" id="decResult">Decrypted text
+      <button class="copy-btn" onclick="copyText('decResult')">📋</button>
+    </div>
+    <div class="message" id="decMsg"></div>
   </div>
 
   <script>
@@ -80,6 +214,7 @@
       .then(res => res.json())
       .then(data => {
         document.getElementById('encResult').innerText = data.code || data.error;
+        document.getElementById('encMsg').textContent = '';
       });
     }
 
@@ -95,7 +230,33 @@
       .then(res => res.json())
       .then(data => {
         document.getElementById('decResult').innerText = data.text || data.error;
+        document.getElementById('decMsg').textContent = '';
       });
+    }
+
+    function copyText(id) {
+      const text = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const msgId = id === 'encResult' ? 'encMsg' : 'decMsg';
+        document.getElementById(msgId).textContent = 'Copied to clipboard!';
+        setTimeout(() => document.getElementById(msgId).textContent = '', 2000);
+      });
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+      const isDark = document.body.classList.contains('dark');
+      localStorage.setItem('aes-theme', isDark ? 'dark' : 'light');
+      document.querySelector('.theme-toggle').textContent = isDark ? '☀️' : '🌙';
+    }
+
+    // Set theme on load
+    window.onload = function() {
+      const savedTheme = localStorage.getItem('aes-theme');
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark');
+        document.querySelector('.theme-toggle').textContent = '☀️';
+      }
     }
   </script>
 </body>
