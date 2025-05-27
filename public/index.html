@@ -3,173 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AES Encryption</title>
-  <style>
-    :root {
-      --bg-light: #f0f4f8;
-      --text-light: #1a202c;
-      --card-bg-light: #ffffff;
-      --result-bg-light: #f1f5f9;
-
-      --bg-dark: #1a202c;
-      --text-dark: #e2e8f0;
-      --card-bg-dark: #2d3748;
-      --result-bg-dark: #4a5568;
-
-      --accent: #3182ce;
-      --success: #48bb78;
-    }
-
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 20px;
-      display: flex;
-      justify-content: center;
-      background-color: var(--bg-light);
-      color: var(--text-light);
-      transition: background-color 0.3s, color 0.3s;
-    }
-
-    body.dark {
-      background-color: var(--bg-dark);
-      color: var(--text-dark);
-    }
-
-    .container {
-      background: var(--card-bg-light);
-      padding: 20px;
-      border-radius: 12px;
-      width: 100%;
-      max-width: 640px;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-      position: relative;
-      transition: background 0.3s;
-    }
-
-    body.dark .container {
-      background: var(--card-bg-dark);
-    }
-
-    h2 {
-      color: var(--accent);
-      text-align: center;
-      margin-bottom: 15px;
-    }
-
-    textarea, input {
-      width: 80%;
-      margin-top: 10px;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      transition: border 0.3s, background 0.3s, color 0.3s;
-    }
-
-    body.dark textarea, body.dark input {
-      background: #2d3748;
-      color: #e2e8f0;
-      border-color: #555;
-    }
-
-    textarea:focus, input:focus {
-      border-color: var(--accent);
-      outline: none;
-    }
-
-.copy-btn-enc {
-  background-color: var(--accent);
-  color: white;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 8px;
-  margin-top: 10px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 600;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
-}
-
-.copy-btn-enc:hover {
-  background-color: var(--accent-hover, #0056b3); /* fallback hover color */
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-}
-
-.copy-btn-enc:active {
-  transform: translateY(1px);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-}
-
-
-
-  
-    .result-box {
-      background: var(--result-bg-light);
-      padding: 12px;
-      margin-top: 10px;
-      word-wrap: break-word;
-      position: relative;
-      border-radius: 8px;
-      width: 80%;
-      transition: background 0.3s;
-    }
-
-    body.dark .result-box {
-      background: var(--result-bg-dark);
-    }
-
- 
-
-    .message {
-      text-align: center;
-      margin-top: 10px;
-      font-size: 14px;
-      color: var(--success);
-    }
-
-    .theme-toggle {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: transparent;
-      border: 1px solid var(--accent);
-      padding: 5px 10px;
-      border-radius: 6px;
-      color: var(--accent);
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-      .glow-line {
-    border: none;
-    height: 4px;
-    width: 100%;
-    margin: 50px auto;
-    background-color: #e182ce;
-    border-radius: 5px;
-    box-shadow: 0 0 10px #e182ce, 0 0 20px #e182ce;
-    animation: glowPulse 1.5s infinite alternate;
-  }
-
-  @keyframes glowPulse {
-    from {
-      box-shadow: 0 0 10px #e182ce, 0 0 20px #e182ce;
-    }
-    to {
-      box-shadow: 0 0 20px #e182ce, 0 0 30px #e182ce;
-    }
-  }
-
-  </style>
+  <title>AES Encryption | Shubham</title>
+ <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
     <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
 
-    <h2>🔐 AES Encrypt</h2>
+    <h2>🔐 AES Encryption</h2>
+    <label for="encryptText">Text to Encrypt:</label>
     <textarea id="plainText" rows="3" placeholder="Enter text to encrypt"></textarea>
+     <label for="encryptKey">Secret Key:</label>
     <input type="text" id="encKey" placeholder="Secret Key"/>
     <button class="copy-btn-enc" onclick="encrypt()">Encrypt</button>
     <div class="result-box" id="encResult">Encrypted code
@@ -183,8 +27,10 @@
 
 
 
-    <h2>🔓 AES Decrypt</h2>
+    <h2>🔓 AES Decryption</h2>
+    <label for="decryptCode">Encrypted Code (10 chars):</label>
     <textarea id="cipherText" rows="3" placeholder="Enter encrypted code"></textarea>
+    <label for="decryptKey">Secret Key:</label>
     <input type="text" id="decKey" placeholder="Secret Key"/>
     <button class="copy-btn-enc" onclick="decrypt()">Decrypt</button>
     <div class="result-box" id="decResult">Decrypted text

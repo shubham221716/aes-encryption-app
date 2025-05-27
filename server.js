@@ -26,7 +26,7 @@ app.post('/encrypt', (req, res) => {
   encrypted += cipher.final('base64');
 
   const hash = crypto.createHash('sha256').update(encrypted).digest('base64');
-  const short = hash.replace(/[^A-Za-z0-9]/g, '').slice(0, 10);
+  const short = hash.replace(/[^A-Za-z0-9@#$]/g, '').slice(0, 10);
 
   store.set(short, encrypted);
   res.json({ code: short });
