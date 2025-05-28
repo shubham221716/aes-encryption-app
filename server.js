@@ -18,13 +18,24 @@ function getIV() {
 }
 
 function generateShortCode(hash) {
-  // Remove non-alphanumeric characters
-  const base = hash.replace(/[^A-Za-z0-9]/g, '').slice(0, 8);
+  // Remove non-alphanumeric characters and take first 8 chars
+  const base1 = hash.replace(/[^A-Za-z0-9]/g, '').slice(0, 8);
+
   const symbols = ['@', '#', '$', '%', '&'];
-  const sym1 = symbols[Math.floor(Math.random() * symbols.length)];
-  const sym2 = symbols[Math.floor(Math.random() * symbols.length)];
-  return base + sym1 + sym2;
+
+  // Create a deterministic number from the hash (e.g., using char codes)
+  let total = 0;
+  for (let i = 0; i < hash.length; i++) {
+    total += hash.charCodeAt(i);
+  }
+
+  // Deterministically pick symbols using modulo
+  const sym1 = symbols[total % symbols.length];
+  const sym2 = symbols[(total * 7) % symbols.length]; // Multiply by a prime to vary
+
+  return base1 + sym1 + sym2;
 }
+
 
 app.post('/encrypt', (req, res) => {
   const { text, key } = req.body;
