@@ -14,7 +14,16 @@ function getKey(secret) {
 }
 
 function getIV() {
-  return Buffer.from('1234567890abcdef');
+  return Buffer.from('1234567890abcdef'); // still fixed, could be randomized in future
+}
+
+function generateShortCode(hash) {
+  // Remove non-alphanumeric characters
+  const base = hash.replace(/[^A-Za-z0-9]/g, '').slice(0, 8);
+  const symbols = ['@', '#', '$', '%', '&'];
+  const sym1 = symbols[Math.floor(Math.random() * symbols.length)];
+  const sym2 = symbols[Math.floor(Math.random() * symbols.length)];
+  return base + sym1 + sym2;
 }
 
 app.post('/encrypt', (req, res) => {
@@ -26,7 +35,7 @@ app.post('/encrypt', (req, res) => {
   encrypted += cipher.final('base64');
 
   const hash = crypto.createHash('sha256').update(encrypted).digest('base64');
-  const short = hash.replace(/[^A-Za-z0-9@#$]/g, '').slice(0, 10);
+  const short = generateShortCode(hash);
 
   store.set(short, encrypted);
   res.json({ code: short });
