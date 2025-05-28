@@ -109,12 +109,12 @@
         box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
     }
 
-.copy-success {
-  color: green;
-  font-weight: bold;
-  font-size: 14px;
-  transition: opacity 0.3s ease;
-}
+    .copy-success {
+        color: green;
+        font-weight: bold;
+        font-size: 14px;
+        transition: opacity 0.3s ease;
+    }
 
 
 
@@ -185,3 +185,31 @@
             box-shadow: 0 0 20px #e182ce, 0 0 30px #e182ce;
         }
     }
+
+
+    .decrypt-container {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* space between text and button */
+}
+
+.result-box {
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  flex: 1; /* allows it to grow and take space */
+}
+
+.copy-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  padding: 5px;
+  transition: background 0.2s;
+}
+
+.copy-btn:hover {
+  background: #e0e0e0;
+  border-radius: 4px;
+}

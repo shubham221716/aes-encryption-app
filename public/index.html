@@ -33,7 +33,7 @@
 
       <div class="message" id="encMsg"></div> -->
 
-      <div id="encResult" class="result-box">Encrypted code</div>
+      <!-- <div id="encResult" class="result-box">Encrypted code</div>
       <span id="encMsg" class="message"></span>
 
       <button
@@ -42,7 +42,19 @@
         title="Copy to clipboard"
       >
         📋
-      </button>
+      </button> -->
+
+<div class="decrypt-container">
+        <div id="encResult" class="result-box">Encrypted code</div>
+        <button
+          class="copy-btn"
+          onclick="copyToClipboard('encResult')"
+          title="Copy to clipboard"
+        >
+          📋
+        </button>
+      </div>
+      <span id="encMsg" class="message"></span>
 
       <hr class="glow-line" />
 
@@ -68,7 +80,7 @@
       </div>
 
       <div class="message" id="decMsg"></div> -->
-      <div id="decResult" class="result-box">Decrypted text</div>
+      <!-- <div id="decResult" class="result-box">Decrypted text</div>
       <span id="decMsg" class="message"></span>
 
       <button
@@ -77,7 +89,18 @@
         title="Copy to clipboard"
       >
         📋
-      </button>
+      </button> -->
+      <div class="decrypt-container">
+        <div id="decResult" class="result-box">Decrypted text</div>
+        <button
+          class="copy-btn"
+          onclick="copyToClipboard('decResult')"
+          title="Copy to clipboard"
+        >
+          📋
+        </button>
+      </div>
+      <span id="decMsg" class="message"></span>
     </div>
 
     <script>
